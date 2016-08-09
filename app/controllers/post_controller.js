@@ -12,6 +12,7 @@ export const createPost = (req, res) => {
   post.title = req.body.title;
   post.content = req.body.content;
   post.tags = req.body.tags;
+
   post.save()
   .then(result => {
     res.json({ message: 'Post created' });
@@ -43,8 +44,13 @@ export const getPost = (req, res) => {
 };
 
 export const deletePost = (req, res) => {
-  Post.findById(req.params.postId).remove(err => { console.log(err); });
-  res.send('delete a post here');
+  Post.remove({ _id: req.params.id }, (err) => {
+    if (err) {
+      res.json({ message: `Error: ${err}` });
+    } else {
+      res.json({ message: 'Deleted!' });
+    }
+  });
 };
 
 export const updatePost = (req, res) => {
