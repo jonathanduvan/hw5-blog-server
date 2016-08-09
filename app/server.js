@@ -17,12 +17,14 @@ const app = express();
 app.use(cors());
 
 // REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', apiRouter);
+
 
 // enable json message body for posting data to API
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// all of our routes will be prefixed with /api
+app.use('/api', apiRouter);
 
 
 // default index route

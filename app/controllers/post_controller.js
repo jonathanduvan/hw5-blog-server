@@ -16,9 +16,11 @@ export const createPost = (req, res) => {
   .then(result => {
     res.json({ message: 'Post created' });
   }).catch(error => {
+    res.send('Could not post');
     res.json({ error });
   });
 };
+
 export const getPosts = (req, res) => {
   Post.find()
     .then(result => {
