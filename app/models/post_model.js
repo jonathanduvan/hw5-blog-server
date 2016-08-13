@@ -5,6 +5,7 @@ const PostSchema = new Schema({
   title: String,
   content: String,
   tags: String,
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 // create model class
