@@ -38,6 +38,7 @@ UserSchema.pre('save', function beforeUserSave(next) {
   });
 });
 
+// Add password compare function
 UserSchema.methods.comparePassword = function comparePassword(candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) { return callback(err); }

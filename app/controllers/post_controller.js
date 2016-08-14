@@ -1,45 +1,51 @@
 import Post from '../models/post_model';
 
-const cleanPosts = (posts) => {
-  return posts.map(post => {
-    return { id: post._id, title: post.title, tags: post.tags };
-  });
-};
-
 export const createPost = (req, res) => {
   const post = new Post();
-
   post.title = req.body.title;
+  post.tags = req.body.tags.split(' ');
   post.content = req.body.content;
-  post.tags = req.body.tags;
+  post.author = req.user._id;
 
   post.save()
   .then(result => {
-    res.json({ message: 'Post created' });
-  }).catch(error => {
-    res.send('Could not post');
+    res.json({ message: 'Post created!' });
+  })
+  .catch(error => {
     res.json({ error });
   });
 };
 
 export const getPosts = (req, res) => {
-  Post.find()
-    .then(result => {
-  //    result.sort('created_at');
-      res.json(cleanPosts(result));
-    }).catch(error => {
-      res.send('Could not retrieve posts');
-      res.json({ error });
-    });
+  Post.find().sort('-created_at').exec((err, posts) => {
+    if (err) {
+      res.json({ message: `Error: ${err}` });
+    } else {
+      res.json(posts.map(post => {
+        return {
+          id: post._id,
+          tags: post.tags,
+          title: post.title,
+        };
+      }));
+    }
+  });
 };
 
 export const getPost = (req, res) => {
-  Post.findById(req.params.postId)
-  .then(response => {
-    res.json(response);
+  Post.findById(req.params.id)
+  .populate('author')
+  .then(post => {
+    res.json({
+      id: post._id,
+      tags: post.tags,
+      title: post.title,
+      content: post.content,
+      author: post.author,
+    });
   })
-  .catch(error => {
-    res.json(error);
+  .catch(err => {
+    res.json({ message: `Error: ${err}` });
   });
 };
 
@@ -54,9 +60,11 @@ export const deletePost = (req, res) => {
 };
 
 export const updatePost = (req, res) => {
-  Post.update({ _id: req.params.id }, req.body).then(result => {
-    res.json({ message: 'Post Updated' });
-  }).catch(error => {
-    res.json({ error });
+  Post.findOneAndUpdate({ _id: req.params.id }, req.body, (err) => {
+    if (err) {
+      res.json({ message: `Error: ${err}` });
+    } else {
+      res.json({ message: 'Updated!' });
+    }
   });
 };
