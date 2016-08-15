@@ -26,6 +26,7 @@ export const signup = (req, res, next) => {
   User.findOne({ email })
   .then(found => {
     if (!found) {
+      console.log('user can be made');
       const user = new User();
       user.email = email;
       user.password = password;
