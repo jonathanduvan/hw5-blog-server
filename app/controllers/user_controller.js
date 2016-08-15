@@ -24,27 +24,37 @@ export const signup = (req, res, next) => {
 
   // Check if there exists a user with that email
   User.findOne({ email })
-  .then(existing => {
-    if (!existing) {
+  .then(found => {
+    if (!found) {
       const user = new User();
       user.email = email;
       user.password = password;
       user.username = username;
 
-      // Attempt to save the new user
       user.save()
-      .then(result => {
-        res.json({ token: tokenForUser(user) });
-      })
-      .catch(err => {
-        res.status(400).send(`Error: ${err}`);
-      });
+        .then(result => {
+          res.send({ token: tokenForUser(result) });
+        })
+        .catch(error => {
+          res.json({ error: 'first one' });
+        });
     } else {
-      // Handle existing email
-      return res.status(422).send('An account already existing with this email.');
+      res.json('User already exists');
     }
   })
-  .catch(err => {
-    res.status(400).send(`Error: ${err}.`);
+  .catch(error => {
+    res.json({ error });
+  });
+};
+
+
+export const getUsers = (req, res) => {
+  User.find()
+  .then(users => {
+    // console.log(users);
+    res.json(users);
+  })
+  .catch(error => {
+    res.json({ error });
   });
 };
