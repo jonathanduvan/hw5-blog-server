@@ -18,7 +18,7 @@ const localOptions = { usernameField: 'email' };
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: config.secret,
+  secretOrKey: process.env.API_SECRET,
 };
 
 
