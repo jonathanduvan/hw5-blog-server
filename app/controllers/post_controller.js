@@ -3,15 +3,17 @@ import Post from '../models/post_model';
 export const createPost = (req, res) => {
   const post = new Post();
   post.title = req.body.title;
-  post.tags = req.body.tags.split(' ');
+  post.tags = req.body.tags;
   post.content = req.body.content;
   post.author = req.user._id;
+  console.log(post.title);
 
   post.save()
   .then(result => {
     res.json({ message: 'Post created!' });
   })
   .catch(error => {
+    console.log({ error });
     res.json({ error });
   });
 };
