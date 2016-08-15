@@ -17,6 +17,7 @@ export const signup = (req, res, next) => {
   const password = req.body.password;
   const username = req.body.username;
 
+  console.log('function was made');
   // Check that there is an email and a password
   if (!email || !password || !username) {
     return res.status(422).send('You must provide email, password, and username.');
@@ -26,7 +27,6 @@ export const signup = (req, res, next) => {
   User.findOne({ email })
   .then(found => {
     if (!found) {
-      console.log('user can be made');
       const user = new User();
       user.email = email;
       user.password = password;
