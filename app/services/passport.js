@@ -1,3 +1,5 @@
+
+// lets import some stuff
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
@@ -23,14 +25,14 @@ const jwtOptions = {
 const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
   // should find user by email and check password
   // Verify this email and password, call done with the user
-    // if it is the correct email and password
-    // otherwise, call done with false
+  // if it is the correct email and password
+  // otherwise, call done with false
   User.findOne({ email }, (err, user) => {
     if (err) { return done(err); }
 
     if (!user) { return done(null, false); }
 
-      // compare passwords - is `password` equal to user.password?
+    // compare passwords - is `password` equal to user.password?
     user.comparePassword(password, (err, isMatch) => {
       if (err) {
         done(err);
@@ -44,9 +46,10 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 });
 
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
+  // is called with confirmed jwt we just need to confirm that user exits
   // See if the user ID in the payload exists in our database
-    // If it does, call 'done' with that other
-    // otherwise, call done without a user object
+  // If it does, call 'done' with that other
+  // otherwise, call done without a user object
   User.findById(payload.sub, (err, user) => {
     if (err) {
       done(err, false);
